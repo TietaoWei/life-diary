@@ -31,12 +31,21 @@ async function initDb() {
       id UUID PRIMARY KEY,
       user_id UUID NOT NULL,
       content TEXT NOT NULL,
+      image TEXT,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+    );
+    CREATE TABLE IF NOT EXISTS comments (
+      id UUID PRIMARY KEY,
+      post_id UUID NOT NULL,
+      user_id UUID NOT NULL,
+      content TEXT NOT NULL,
       created_at TIMESTAMPTZ NOT NULL DEFAULT now()
     );
   `);
+  await pool.query('ALTER TABLE posts ADD COLUMN IF NOT EXISTS image TEXT');
 }
 
-app.use(express.json());
+app.use(express.json({ limit: '15mb' }));
 app.use(express.urlencoded({ extended: true }));
 
 app.use(session({
@@ -145,12 +154,13 @@ app.get('/api/me', (req, res) => {
 // 发布动态
 app.post('/api/posts', requireAuthApi, async (req, res) => {
   const content = (req.body.content || '').trim();
-  if (!content) return res.status(400).json({ error: '内容不能为空' });
+  const image = typeof req.body.image === 'string' && req.body.image.startsWith('data:image/') ? req.body.image : null;
+  if (!content && !image) return res.status(400).json({ error: '内容不能为空' });
   try {
     const id = crypto.randomUUID();
     await pool.query(
-      'INSERT INTO posts (id, user_id, content) VALUES ($1, $2, $3)',
-      [id, req.session.userId, content]
+      'INSERT INTO posts (id, user_id, content, image) VALUES ($1, $2, $3, $4)',
+      [id, req.session.userId, content, image]
     );
     res.json({ ok: true, id });
   } catch (e) {
@@ -163,7 +173,9 @@ app.post('/api/posts', requireAuthApi, async (req, res) => {
 app.get('/api/posts', requireAuthApi, async (req, res) => {
   try {
     const result = await pool.query(
-      'SELECT id, content, created_at FROM posts WHERE user_id = $1 ORDER BY created_at DESC, id DESC',
+      `SELECT p.id, p.content, p.image, p.created_at,
+              (SELECT COUNT(*) FROM comments c WHERE c.post_id = p.id) AS comment_count
+       FROM posts p WHERE p.user_id = $1 ORDER BY p.created_at DESC, p.id DESC`,
       [req.session.userId]
     );
     res.json({ ok: true, posts: result.rows });
@@ -176,6 +188,7 @@ app.get('/api/posts', requireAuthApi, async (req, res) => {
 // 删除动态
 app.delete('/api/posts/:id', requireAuthApi, async (req, res) => {
   try {
+    await pool.query('DELETE FROM comments WHERE post_id = $1', [req.params.id]);
     const result = await pool.query(
       'DELETE FROM posts WHERE id = $1 AND user_id = $2',
       [req.params.id, req.session.userId]
@@ -185,6 +198,36 @@ app.delete('/api/posts/:id', requireAuthApi, async (req, res) => {
   } catch (e) {
     console.error('删除失败：', e.message);
     res.status(500).json({ error: '删除失败，请稍后重试' });
+  }
+});
+
+// 获取某条动态的评论
+app.get('/api/posts/:id/comments', requireAuthApi, async (req, res) => {
+  try {
+    const result = await pool.query(
+      'SELECT c.id, c.content, c.created_at FROM comments c JOIN posts p ON p.id = c.post_id WHERE c.post_id = $1 AND p.user_id = $2 ORDER BY c.created_at ASC',
+      [req.params.id, req.session.userId]
+    );
+    res.json({ ok: true, comments: result.rows });
+  } catch (e) {
+    console.error('获取评论失败：', e.message);
+    res.status(500).json({ error: '获取评论失败' });
+  }
+});
+
+// 发表评论
+app.post('/api/posts/:id/comments', requireAuthApi, async (req, res) => {
+  const content = (req.body.content || '').trim();
+  if (!content) return res.status(400).json({ error: '评论不能为空' });
+  try {
+    const post = await pool.query('SELECT id FROM posts WHERE id = $1 AND user_id = $2', [req.params.id, req.session.userId]);
+    if (post.rowCount === 0) return res.status(404).json({ error: '动态不存在' });
+    const id = crypto.randomUUID();
+    await pool.query('INSERT INTO comments (id, post_id, user_id, content) VALUES ($1, $2, $3, $4)', [id, req.params.id, req.session.userId, content]);
+    res.json({ ok: true, id });
+  } catch (e) {
+    console.error('发表评论失败：', e.message);
+    res.status(500).json({ error: '发表评论失败' });
   }
 });
 

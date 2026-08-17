@@ -176,7 +176,7 @@
             ></textarea>
 
             <div class="mt-4">
-                <button type="button" data-dom-id="btn-add-photo" class="w-full flex flex-col items-center justify-center gap-2 rounded-lg border border-dashed border-[var(--line)] bg-[var(--surface-2)] text-[var(--ink-2)] py-6 hover:bg-[var(--brand-soft)] hover:text-[var(--brand)] transition-colors">
+                <button type="button" id="btn-add-photo" data-dom-id="btn-add-photo" class="w-full flex flex-col items-center justify-center gap-2 rounded-lg border border-dashed border-[var(--line)] bg-[var(--surface-2)] text-[var(--ink-2)] py-6 hover:bg-[var(--brand-soft)] hover:text-[var(--brand)] transition-colors">
                     <i data-lucide="image-plus" class="w-6 h-6"></i>
                     <span class="text-[13px]">添加照片（可选）</span>
                 </button>
@@ -193,8 +193,11 @@
                     <img src="../assets/photo-sunset.jpg" alt="">
                 </div>
 
+                <input type="file" id="photo-input" accept="image/*" class="hidden">
+
                 <div class="mt-3 rounded-lg border border-[var(--line)] overflow-hidden hidden" id="single-photo-preview">
-                    <img src="../assets/photo-sunset.jpg" alt="" class="w-full aspect-video object-cover">
+                    <img src="../assets/photo-sunset.jpg" alt="照片预览" class="w-full aspect-video object-cover">
+                    <button type="button" id="btn-remove-photo" class="w-full py-2 text-[13px] text-[var(--ink-2)] hover:text-[var(--state-error)] transition-colors">移除照片</button>
                 </div>
             </div>
 
@@ -213,15 +216,41 @@
       img { max-width: 100%; display: block; }
     </style>
     <script>
+      let photoDataUrl = null;
+
+      document.getElementById('btn-add-photo')?.addEventListener('click', () => {
+        document.getElementById('photo-input').click();
+      });
+
+      document.getElementById('photo-input')?.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = () => {
+          photoDataUrl = reader.result;
+          document.querySelector('#single-photo-preview img').src = photoDataUrl;
+          document.getElementById('single-photo-preview').classList.remove('hidden');
+          document.getElementById('btn-add-photo').classList.add('hidden');
+        };
+        reader.readAsDataURL(file);
+      });
+
+      document.getElementById('btn-remove-photo')?.addEventListener('click', () => {
+        photoDataUrl = null;
+        document.getElementById('photo-input').value = '';
+        document.getElementById('single-photo-preview').classList.add('hidden');
+        document.getElementById('btn-add-photo').classList.remove('hidden');
+      });
+
       document.getElementById('btn-publish')?.addEventListener('click', async (e) => {
         e.preventDefault();
         const content = document.getElementById('post-content').value.trim();
-        if (!content) { alert('请先写点内容'); return; }
+        if (!content && !photoDataUrl) { alert('请写点内容或添加照片'); return; }
         try {
           const res = await fetch('/api/posts', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ content })
+            body: JSON.stringify({ content, image: photoDataUrl })
           });
           const data = await res.json();
           if (res.ok) {

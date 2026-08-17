@@ -175,7 +175,7 @@
       </header>
       <main id="main-scroll">
         <aside id="date-filter-panel" class="py-3 px-2 border-r border-[var(--line)] bg-[var(--surface)]">
-          <div class="flex flex-col gap-2">
+          <div class="flex flex-col gap-2" id="date-list">
             <button data-dom-id="date-2026-08-14" class="w-full flex flex-col items-center py-3 px-1 rounded-lg bg-[var(--brand-soft)] text-[var(--brand)]">
               <span class="text-[11px] opacity-80 leading-none">今天</span>
               <span class="text-sm font-medium mt-1">8月14日</span>
@@ -235,6 +235,10 @@
         const d = new Date(iso);
         return (d.getMonth() + 1) + '月' + d.getDate() + '日 ' + WEEKDAYS[d.getDay()];
       }
+      function dateKey(iso) {
+        const d = new Date(iso);
+        return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+      }
 
       async function loadPosts() {
         const feed = document.getElementById('timeline-feed');
@@ -251,7 +255,30 @@
 
       function emptyState() {
         const feed = document.getElementById('timeline-feed');
+        const panel = document.getElementById('date-list');
+        if (panel) panel.innerHTML = '';
         feed.innerHTML = '<div class="py-16 text-center text-[var(--ink-3)] text-sm">还没有记录，点下方「发布」写第一条吧</div>';
+      }
+
+      function buildDatePanel(groups) {
+        const panel = document.getElementById('date-list');
+        if (!panel) return;
+        panel.innerHTML = '';
+        const today = new Date().toDateString();
+        groups.forEach((g) => {
+          const d = new Date(g.items[0].created_at);
+          const btn = document.createElement('button');
+          btn.className = 'w-full flex flex-col items-center py-3 px-1 rounded-lg text-[var(--ink-2)] hover:bg-[var(--surface-2)] transition-colors';
+          btn.innerHTML =
+            (d.toDateString() === today ? '<span class="text-[11px] opacity-80 leading-none">今天</span>' : '') +
+            '<span class="text-sm font-medium mt-1">' + (d.getMonth() + 1) + '月' + d.getDate() + '日</span>' +
+            '<span class="w-1.5 h-1.5 rounded-full bg-[var(--brand)] mt-1.5"></span>';
+          btn.addEventListener('click', () => {
+            const article = document.getElementById('day-' + g.key);
+            if (article) article.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          });
+          panel.appendChild(btn);
+        });
       }
 
       function renderPosts(posts) {
@@ -260,7 +287,7 @@
         if (!posts.length) { emptyState(); return; }
         const groups = [];
         for (const p of posts) {
-          const key = new Date(p.created_at).toDateString();
+          const key = dateKey(p.created_at);
           const last = groups[groups.length - 1];
           if (last && last.key === key) last.items.push(p);
           else groups.push({ key, items: [p] });
@@ -268,6 +295,7 @@
         for (const g of groups) {
           const article = document.createElement('article');
           article.className = 'day-section';
+          article.id = 'day-' + g.key;
           const h2 = document.createElement('h2');
           h2.className = 'text-base font-semibold text-[var(--ink)] mb-3 sticky top-0 bg-[var(--bg)] py-1 z-10';
           h2.textContent = fmtDay(g.items[0].created_at);
@@ -278,6 +306,7 @@
           article.appendChild(list);
           feed.appendChild(article);
         }
+        buildDatePanel(groups);
         if (window.lucide) lucide.createIcons();
       }
 
@@ -292,37 +321,135 @@
         const card = document.createElement('div');
         card.className = 'flex-1 min-w-0 bg-[var(--surface)] rounded-lg p-3 border border-[var(--line)] shadow-sm';
 
-        const text = document.createElement('p');
-        text.className = 'text-sm text-[var(--ink)] mb-2 whitespace-pre-wrap break-words';
-        text.textContent = p.content;
-        card.appendChild(text);
+        if (p.content) {
+          const text = document.createElement('p');
+          text.className = 'text-sm text-[var(--ink)] mb-2 whitespace-pre-wrap break-words';
+          text.textContent = p.content;
+          card.appendChild(text);
+        }
+        if (p.image) {
+          const img = document.createElement('img');
+          img.src = p.image;
+          img.alt = '照片';
+          img.className = 'w-full rounded-md object-cover mb-2';
+          img.style.aspectRatio = '16/10';
+          card.appendChild(img);
+        }
 
         const actions = document.createElement('div');
-        actions.className = 'flex items-center justify-end';
+        actions.className = 'flex items-center justify-end gap-3';
+
+        const commentBtn = document.createElement('button');
+        commentBtn.type = 'button';
+        commentBtn.className = 'flex items-center gap-1 text-xs text-[var(--ink-2)] hover:text-[var(--brand)] transition-colors';
+        commentBtn.innerHTML = '<i data-lucide="message-circle" class="w-4 h-4"></i><span>评论 ' + Number(p.comment_count || 0) + '</span>';
+
         const del = document.createElement('button');
         del.type = 'button';
         del.className = 'flex items-center gap-1 text-xs text-[var(--ink-2)] hover:text-[var(--state-error)] transition-colors';
         del.innerHTML = '<i data-lucide="trash-2" class="w-4 h-4"></i><span>删除</span>';
-        del.addEventListener('click', () => deletePost(p.id, entry));
+        del.addEventListener('click', () => deletePost(p.id));
+
+        actions.appendChild(commentBtn);
         actions.appendChild(del);
         card.appendChild(actions);
+
+        const panel = document.createElement('div');
+        panel.className = 'hidden mt-2 border-t border-[var(--line)] pt-2';
+        const listEl = document.createElement('div');
+        listEl.className = 'comment-list flex flex-col gap-2 mb-2';
+        panel.appendChild(listEl);
+        const form = document.createElement('form');
+        form.className = 'flex gap-2';
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.placeholder = '写评论…';
+        input.className = 'flex-1 min-w-0 rounded-md border border-[var(--line)] bg-[var(--surface-2)] px-2 py-1 text-sm text-[var(--ink)] focus:outline-none';
+        const send = document.createElement('button');
+        send.type = 'submit';
+        send.className = 'text-sm text-[var(--brand)] font-medium shrink-0';
+        send.textContent = '发送';
+        form.appendChild(input);
+        form.appendChild(send);
+        panel.appendChild(form);
+        card.appendChild(panel);
+
+        let loaded = false;
+        commentBtn.addEventListener('click', () => {
+          panel.classList.toggle('hidden');
+          if (!panel.classList.contains('hidden') && !loaded) {
+            loadComments(p.id, listEl);
+            loaded = true;
+          }
+        });
+        form.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const content = input.value.trim();
+          if (!content) return;
+          try {
+            const res = await fetch('/api/posts/' + p.id + '/comments', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ content })
+            });
+            const data = await res.json();
+            if (res.ok) {
+              input.value = '';
+              loaded = false;
+              await loadComments(p.id, listEl);
+              loaded = true;
+              const n = Number(p.comment_count || 0) + 1;
+              p.comment_count = n;
+              commentBtn.querySelector('span').textContent = '评论 ' + n;
+            } else {
+              alert(data.error || '评论失败');
+            }
+          } catch (err) {
+            alert('网络错误，请稍后重试');
+          }
+        });
 
         entry.appendChild(time);
         entry.appendChild(card);
         return entry;
       }
 
-      async function deletePost(id, entryEl) {
+      async function loadComments(postId, listEl) {
+        listEl.innerHTML = '<span class="text-xs text-[var(--ink-3)]">加载中…</span>';
+        try {
+          const res = await fetch('/api/posts/' + postId + '/comments', { headers: { 'Accept': 'application/json' } });
+          const data = await res.json();
+          listEl.innerHTML = '';
+          const comments = data.comments || [];
+          if (!comments.length) {
+            listEl.innerHTML = '<span class="text-xs text-[var(--ink-3)]">还没有评论</span>';
+            return;
+          }
+          for (const c of comments) {
+            const div = document.createElement('div');
+            div.className = 'rounded-md bg-[var(--surface-2)] px-2 py-1.5';
+            const t = document.createElement('p');
+            t.className = 'text-sm text-[var(--ink)] whitespace-pre-wrap break-words';
+            t.textContent = c.content;
+            const time = document.createElement('span');
+            time.className = 'text-[11px] text-[var(--ink-3)]';
+            time.textContent = fmtTime(c.created_at);
+            div.appendChild(t);
+            div.appendChild(time);
+            listEl.appendChild(div);
+          }
+        } catch (e) {
+          listEl.innerHTML = '<span class="text-xs text-[var(--state-error)]">加载失败</span>';
+        }
+      }
+
+      async function deletePost(id) {
         if (!confirm('确定删除这条动态吗？')) return;
         try {
           const res = await fetch('/api/posts/' + id, { method: 'DELETE' });
           const data = await res.json();
           if (res.ok) {
-            const article = entryEl.closest('.day-section');
-            entryEl.remove();
-            if (article && article.querySelectorAll('.entry').length === 0) article.remove();
-            const feed = document.getElementById('timeline-feed');
-            if (!feed.querySelector('.entry')) emptyState();
+            loadPosts();
           } else {
             alert(data.error || '删除失败');
           }
