@@ -43,6 +43,7 @@ app.use(session({
 // 静态资源
 app.use('/assets', express.static(path.join(__dirname, 'assets')));
 app.get('/colors_and_type.css', (req, res) => res.sendFile(path.join(__dirname, 'colors_and_type.css')));
+app.get('/favicon.png', (req, res) => res.sendFile(path.join(__dirname, 'favicon.png')));
 
 function requireAuth(req, res, next) {
   if (req.session && req.session.userId) return next();
@@ -149,7 +150,7 @@ async function start() {
     console.error('数据库初始化失败：', e.message);
   }
   app.listen(PORT, () => {
-    console.log('生活记录服务已启动，端口：' + PORT);
+    console.log('碎碎念服务已启动，端口：' + PORT);
   });
 }
 

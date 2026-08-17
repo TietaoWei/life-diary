@@ -1,7 +1,7 @@
 {
   "name": "life-diary",
   "version": "1.0.0",
-  "description": "生活记录 - 个人生活记录网页",
+  "description": "碎碎念 - 个人生活记录网页",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
