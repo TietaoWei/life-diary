@@ -27,6 +27,12 @@ async function initDb() {
       password_hash TEXT NOT NULL,
       created_at TIMESTAMPTZ NOT NULL DEFAULT now()
     );
+    CREATE TABLE IF NOT EXISTS posts (
+      id UUID PRIMARY KEY,
+      user_id UUID NOT NULL,
+      content TEXT NOT NULL,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+    );
   `);
 }
 
@@ -48,6 +54,11 @@ app.get('/favicon.png', (req, res) => res.sendFile(path.join(__dirname, 'favicon
 function requireAuth(req, res, next) {
   if (req.session && req.session.userId) return next();
   res.redirect('/login.html');
+}
+
+function requireAuthApi(req, res, next) {
+  if (req.session && req.session.userId) return next();
+  res.status(401).json({ loggedIn: false, error: '请先登录' });
 }
 
 // 注册
@@ -128,6 +139,52 @@ app.get('/api/me', (req, res) => {
     res.json({ loggedIn: true, username: req.session.username });
   } else {
     res.status(401).json({ loggedIn: false });
+  }
+});
+
+// 发布动态
+app.post('/api/posts', requireAuthApi, async (req, res) => {
+  const content = (req.body.content || '').trim();
+  if (!content) return res.status(400).json({ error: '内容不能为空' });
+  try {
+    const id = crypto.randomUUID();
+    await pool.query(
+      'INSERT INTO posts (id, user_id, content) VALUES ($1, $2, $3)',
+      [id, req.session.userId, content]
+    );
+    res.json({ ok: true, id });
+  } catch (e) {
+    console.error('发布失败：', e.message);
+    res.status(500).json({ error: '发布失败，请稍后重试' });
+  }
+});
+
+// 获取当前用户的动态
+app.get('/api/posts', requireAuthApi, async (req, res) => {
+  try {
+    const result = await pool.query(
+      'SELECT id, content, created_at FROM posts WHERE user_id = $1 ORDER BY created_at DESC, id DESC',
+      [req.session.userId]
+    );
+    res.json({ ok: true, posts: result.rows });
+  } catch (e) {
+    console.error('获取动态失败：', e.message);
+    res.status(500).json({ error: '获取动态失败' });
+  }
+});
+
+// 删除动态
+app.delete('/api/posts/:id', requireAuthApi, async (req, res) => {
+  try {
+    const result = await pool.query(
+      'DELETE FROM posts WHERE id = $1 AND user_id = $2',
+      [req.params.id, req.session.userId]
+    );
+    if (result.rowCount === 0) return res.status(404).json({ error: '动态不存在' });
+    res.json({ ok: true });
+  } catch (e) {
+    console.error('删除失败：', e.message);
+    res.status(500).json({ error: '删除失败，请稍后重试' });
   }
 });
 

@@ -166,11 +166,11 @@
         <header class="grid grid-cols-3 items-center h-14 px-1 mb-4">
             <a href="home.html" data-dom-id="btn-cancel" class="text-[var(--ink-2)] text-[15px] px-3 py-2 justify-self-start">取消</a>
             <h1 class="text-center text-[17px] font-medium text-[var(--ink)]">发布</h1>
-            <a href="home.html" data-dom-id="btn-publish" class="text-[var(--brand)] text-[15px] font-medium px-3 py-2 justify-self-end">发布</a>
+            <a href="home.html" id="btn-publish" data-dom-id="btn-publish" class="text-[var(--brand)] text-[15px] font-medium px-3 py-2 justify-self-end">发布</a>
         </header>
 
         <form id="create-form" class="bg-[var(--surface)] rounded-xl border border-[var(--line)] p-4 shadow-[var(--shadow-1)]">
-            <textarea
+            <textarea id="post-content"
                 placeholder="记录今天的生活..."
                 class="w-full min-h-[120px] resize-none border-0 bg-transparent text-[var(--ink)] text-[15px] leading-relaxed placeholder:text-[var(--ink-3)] focus:outline-none p-0"
             ></textarea>
@@ -212,6 +212,28 @@
       * { box-sizing: border-box; }
       img { max-width: 100%; display: block; }
     </style>
+    <script>
+      document.getElementById('btn-publish')?.addEventListener('click', async (e) => {
+        e.preventDefault();
+        const content = document.getElementById('post-content').value.trim();
+        if (!content) { alert('请先写点内容'); return; }
+        try {
+          const res = await fetch('/api/posts', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ content })
+          });
+          const data = await res.json();
+          if (res.ok) {
+            window.location.href = '/home.html';
+          } else {
+            alert(data.error || '发布失败');
+          }
+        } catch (err) {
+          alert('网络错误，请稍后重试');
+        }
+      });
+    </script>
     <script>lucide.createIcons();</script>
 </body>
 </html>
