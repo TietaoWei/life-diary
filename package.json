@@ -4,15 +4,19 @@
   "description": "碎碎念 - 个人生活记录网页",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "build:css": "@tailwindcss/cli -i ./tailwind-input.css -o ./tailwind.css --minify",
+    "postinstall": "npm run build:css"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "express": "^4.19.2",
     "express-session": "^1.18.0",
-    "pg": "^8.12.0"
+    "pg": "^8.12.0",
+    "tailwindcss": "^4.3.1",
+    "@tailwindcss/cli": "^4.3.1"
   }
 }

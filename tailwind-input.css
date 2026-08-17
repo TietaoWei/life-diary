@@ -1,0 +1,10 @@
+@import "tailwindcss";
+
+@source "./pages/*.html";
+
+@layer base {
+  body {
+    background: var(--life-background);
+    color: var(--life-foreground);
+  }
+}

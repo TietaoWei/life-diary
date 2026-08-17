@@ -58,6 +58,7 @@ app.use(session({
 // 静态资源
 app.use('/assets', express.static(path.join(__dirname, 'assets')));
 app.get('/colors_and_type.css', (req, res) => res.sendFile(path.join(__dirname, 'colors_and_type.css')));
+app.get('/tailwind.css', (req, res) => res.sendFile(path.join(__dirname, 'tailwind.css')));
 app.get('/favicon.png', (req, res) => res.sendFile(path.join(__dirname, 'favicon.png')));
 
 function requireAuth(req, res, next) {
