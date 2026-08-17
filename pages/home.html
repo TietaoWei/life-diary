@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>记录</title>
+    <style id="theme-vars">
+:root {
+  --bg: #faf9f7;
+  --surface: #ffffff;
+  --surface-2: #f5f4f1;
+  --ink: #1f1f1f;
+  --ink-2: #6b6b6b;
+  --ink-3: #a3a3a3;
+  --line: #e8e6e1;
+  --brand: #c17f59;
+  --brand-ink: #ffffff;
+  --brand-soft: #f7ede6;
+  --state-success: #5c8d6d;
+  --state-error: #c45b5b;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+  --radius-pill: 999px;
+  --shadow-1: 0 1px 2px rgba(31, 31, 31, 0.05), 0 1px 1px rgba(31, 31, 31, 0.03);
+  --shadow-2: 0 8px 24px -8px rgba(31, 31, 31, 0.12);
+
+  /* Semantic aliases for head contract */
+  --life-background: var(--bg);
+  --life-foreground: var(--ink);
+  --life-card: var(--surface);
+  --life-card-foreground: var(--ink);
+  --life-popover: var(--surface);
+  --life-popover-foreground: var(--ink);
+  --life-primary: var(--brand);
+  --life-primary-foreground: var(--brand-ink);
+  --life-muted: var(--surface-2);
+  --life-muted-foreground: var(--ink-2);
+  --life-border: var(--line);
+  --life-input: var(--line);
+  --life-ring: var(--brand);
+  --life-radius-sm: var(--radius-sm);
+  --life-radius-md: var(--radius-md);
+  --life-radius-lg: var(--radius-lg);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #121212;
+    --surface: #1c1c1c;
+    --surface-2: #262626;
+    --ink: #f2f2f2;
+    --ink-2: #a8a8a8;
+    --ink-3: #6e6e6e;
+    --line: #333333;
+    --brand: #d89770;
+    --brand-ink: #1f1f1f;
+    --brand-soft: #3a2a20;
+    --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.05), 0 1px 1px rgba(0, 0, 0, 0.03);
+    --shadow-2: 0 8px 24px -8px rgba(0, 0, 0, 0.4);
+  }
+}
+
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.1/dist/index.global.js"></script>
+    <script src="https://unpkg.com/lucide@1.8.0/dist/umd/lucide.min.js"></script>
+    <style type="text/tailwindcss">
+  @theme inline {
+    --color-background: var(--life-background);
+    --color-foreground: var(--life-foreground);
+    --color-card: var(--life-card);
+    --color-card-foreground: var(--life-card-foreground);
+    --color-popover: var(--life-popover);
+    --color-popover-foreground: var(--life-popover-foreground);
+    --color-primary: var(--life-primary);
+    --color-primary-foreground: var(--life-primary-foreground);
+    --color-muted: var(--life-muted);
+    --color-muted-foreground: var(--life-muted-foreground);
+    --color-border: var(--life-border);
+    --color-input: var(--life-input);
+    --color-ring: var(--life-ring);
+    --radius-sm: var(--life-radius-sm);
+    --radius-md: var(--life-radius-md);
+    --radius-lg: var(--life-radius-lg);
+  }
+  @layer base {
+    body { background: var(--life-background); color: var(--life-foreground); }
+    td, th { @apply break-words; word-break: break-all; word-break: auto-phrase; }
+    th { @apply whitespace-nowrap; }
+  }
+    </style>
+    <style id="semantic-token-fallback">
+      .bg-background { background-color: var(--life-background); }
+      .text-background { color: var(--life-background); }
+      .border-background { border-color: var(--life-background); }
+      .ring-background { --tw-ring-color: var(--life-background); }
+      .bg-foreground { background-color: var(--life-foreground); }
+      .text-foreground { color: var(--life-foreground); }
+      .border-foreground { border-color: var(--life-foreground); }
+      .ring-foreground { --tw-ring-color: var(--life-foreground); }
+      .bg-card { background-color: var(--life-card); }
+      .text-card { color: var(--life-card); }
+      .border-card { border-color: var(--life-card); }
+      .ring-card { --tw-ring-color: var(--life-card); }
+      .bg-card-foreground { background-color: var(--life-card-foreground); }
+      .text-card-foreground { color: var(--life-card-foreground); }
+      .border-card-foreground { border-color: var(--life-card-foreground); }
+      .ring-card-foreground { --tw-ring-color: var(--life-card-foreground); }
+      .bg-popover { background-color: var(--life-popover); }
+      .text-popover { color: var(--life-popover); }
+      .border-popover { border-color: var(--life-popover); }
+      .ring-popover { --tw-ring-color: var(--life-popover); }
+      .bg-popover-foreground { background-color: var(--life-popover-foreground); }
+      .text-popover-foreground { color: var(--life-popover-foreground); }
+      .border-popover-foreground { border-color: var(--life-popover-foreground); }
+      .ring-popover-foreground { --tw-ring-color: var(--life-popover-foreground); }
+      .bg-primary { background-color: var(--life-primary); }
+      .text-primary { color: var(--life-primary); }
+      .border-primary { border-color: var(--life-primary); }
+      .ring-primary { --tw-ring-color: var(--life-primary); }
+      .bg-primary-foreground { background-color: var(--life-primary-foreground); }
+      .text-primary-foreground { color: var(--life-primary-foreground); }
+      .border-primary-foreground { border-color: var(--life-primary-foreground); }
+      .ring-primary-foreground { --tw-ring-color: var(--life-primary-foreground); }
+      .bg-muted { background-color: var(--life-muted); }
+      .text-muted { color: var(--life-muted); }
+      .border-muted { border-color: var(--life-muted); }
+      .ring-muted { --tw-ring-color: var(--life-muted); }
+      .bg-muted-foreground { background-color: var(--life-muted-foreground); }
+      .text-muted-foreground { color: var(--life-muted-foreground); }
+      .border-muted-foreground { border-color: var(--life-muted-foreground); }
+      .ring-muted-foreground { --tw-ring-color: var(--life-muted-foreground); }
+      .bg-border { background-color: var(--life-border); }
+      .text-border { color: var(--life-border); }
+      .border-border { border-color: var(--life-border); }
+      .ring-border { --tw-ring-color: var(--life-border); }
+      .bg-input { background-color: var(--life-input); }
+      .text-input { color: var(--life-input); }
+      .border-input { border-color: var(--life-input); }
+      .ring-input { --tw-ring-color: var(--life-input); }
+      .bg-ring { background-color: var(--life-ring); }
+      .text-ring { color: var(--life-ring); }
+      .border-ring { border-color: var(--life-ring); }
+      .ring-ring { --tw-ring-color: var(--life-ring); }
+    </style>
+    <style>
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      [data-icon] {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        -webkit-mask-size: contain;
+        mask-size: contain;
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+        -webkit-mask-position: center;
+        mask-position: center;
+        background-color: currentColor;
+      }
+    </style>
+</head>
+<body class="min-h-screen font-sans antialiased">
+    <div class="app-frame">
+      <header class="w-full h-14 flex items-center justify-between px-4 border-b border-[var(--line)] bg-[var(--surface)] shrink-0">
+        <h1 class="text-lg font-semibold text-[var(--ink)]">生活记录</h1>
+        <div class="flex items-center gap-1">
+          <a href="create.html" data-dom-id="btn-create" class="w-9 h-9 flex items-center justify-center rounded-full text-[var(--ink-2)] hover:bg-[var(--surface-2)] transition-colors">
+            <i data-lucide="plus" class="w-5 h-5"></i>
+          </a>
+          <button data-dom-id="btn-filter-toggle" class="w-9 h-9 flex items-center justify-center rounded-full text-[var(--ink-2)] hover:bg-[var(--surface-2)] transition-colors">
+            <i data-lucide="calendar" class="w-5 h-5"></i>
+          </button>
+        </div>
+      </header>
+      <main id="main-scroll">
+        <aside id="date-filter-panel" class="py-3 px-2 border-r border-[var(--line)] bg-[var(--surface)]">
+          <div class="flex flex-col gap-2">
+            <button data-dom-id="date-2026-08-14" class="w-full flex flex-col items-center py-3 px-1 rounded-lg bg-[var(--brand-soft)] text-[var(--brand)]">
+              <span class="text-[11px] opacity-80 leading-none">今天</span>
+              <span class="text-sm font-medium mt-1">8月14日</span>
+              <span class="w-1.5 h-1.5 rounded-full bg-[var(--brand)] mt-1.5"></span>
+            </button>
+            <button class="w-full flex flex-col items-center py-3 px-1 rounded-lg text-[var(--ink-2)] hover:bg-[var(--surface-2)] transition-colors">
+              <span class="text-sm font-medium">8月13日</span>
+              <span class="w-1.5 h-1.5 rounded-full bg-[var(--ink-3)] mt-1.5"></span>
+            </button>
+            <button class="w-full flex flex-col items-center py-3 px-1 rounded-lg text-[var(--ink-2)] hover:bg-[var(--surface-2)] transition-colors">
+              <span class="text-sm font-medium">8月12日</span>
+              <span class="w-1.5 h-1.5 rounded-full bg-[var(--ink-3)] mt-1.5"></span>
+            </button>
+            <button class="w-full flex flex-col items-center py-3 px-1 rounded-lg text-[var(--ink-2)] hover:bg-[var(--surface-2)] transition-colors">
+              <span class="text-sm font-medium">8月10日</span>
+              <span class="w-1.5 h-1.5 rounded-full bg-[var(--ink-3)] mt-1.5"></span>
+            </button>
+            <button class="w-full flex flex-col items-center py-3 px-1 rounded-lg text-[var(--ink-2)] hover:bg-[var(--surface-2)] transition-colors">
+              <span class="text-sm font-medium">8月8日</span>
+              <span class="w-1.5 h-1.5 rounded-full bg-[var(--ink-3)] mt-1.5"></span>
+            </button>
+            <button class="w-full flex flex-col items-center py-3 px-1 rounded-lg text-[var(--ink-2)] hover:bg-[var(--surface-2)] transition-colors">
+              <span class="text-sm font-medium">8月5日</span>
+              <span class="w-1.5 h-1.5 rounded-full bg-[var(--ink-3)] mt-1.5"></span>
+            </button>
+            <button class="w-full flex flex-col items-center py-3 px-1 rounded-lg text-[var(--ink-2)] hover:bg-[var(--surface-2)] transition-colors">
+              <span class="text-sm font-medium">8月1日</span>
+              <span class="w-1.5 h-1.5 rounded-full bg-[var(--ink-3)] mt-1.5"></span>
+            </button>
+            <button class="w-full flex flex-col items-center py-3 px-1 rounded-lg text-[var(--ink-2)] hover:bg-[var(--surface-2)] transition-colors">
+              <span class="text-sm font-medium">7月28日</span>
+              <span class="w-1.5 h-1.5 rounded-full bg-[var(--ink-3)] mt-1.5"></span>
+            </button>
+          </div>
+        </aside>
+        <section id="timeline-feed" class="flex flex-col gap-6">
+          <article class="day-section">
+            <h2 class="text-base font-semibold text-[var(--ink)] mb-3 sticky top-0 bg-[var(--bg)] py-1 z-10">8月14日 周四</h2>
+            <div class="flex flex-col gap-4">
+              <div class="entry flex gap-3">
+                <div class="w-10 text-right text-xs text-[var(--ink-2)] pt-2 shrink-0">09:30</div>
+                <div class="flex-1 min-w-0 bg-[var(--surface)] rounded-lg p-3 border border-[var(--line)] shadow-sm">
+                  <p class="text-sm text-[var(--ink)] mb-2">早安咖啡，开启新一天</p>
+                  <img src="../assets/photo-coffee.jpg" alt="咖啡" class="w-full rounded-md object-cover" style="aspect-ratio: 16/10;">
+                  <button type="button" class="mt-2 w-full flex items-center justify-end gap-1 text-xs text-[var(--ink-2)] hover:text-[var(--brand)] transition-colors">
+                    <i data-lucide="message-circle" class="w-4 h-4"></i>
+                    <span>评论</span>
+                  </button>
+                </div>
+              </div>
+              <div class="entry flex gap-3">
+                <div class="w-10 text-right text-xs text-[var(--ink-2)] pt-2 shrink-0">14:20</div>
+                <div class="flex-1 min-w-0 bg-[var(--surface)] rounded-lg p-3 border border-[var(--line)] shadow-sm">
+                  <p class="text-sm text-[var(--ink)] mb-2">阳台上的小花园，绿意满满</p>
+                  <div class="image-grid-9">
+                    <img src="../assets/photo-plant.jpg" alt="植物">
+                    <img src="../assets/photo-coffee.jpg" alt="咖啡">
+                    <img src="../assets/photo-sunset.jpg" alt="夕阳">
+                    <img src="../assets/photo-coffee.jpg" alt="咖啡">
+                    <img src="../assets/photo-plant.jpg" alt="植物">
+                    <img src="../assets/photo-sunset.jpg" alt="夕阳">
+                    <img src="../assets/photo-sunset.jpg" alt="夕阳">
+                    <img src="../assets/photo-coffee.jpg" alt="咖啡">
+                    <img src="../assets/photo-plant.jpg" alt="植物">
+                  </div>
+                  <button type="button" class="mt-2 w-full flex items-center justify-end gap-1 text-xs text-[var(--ink-2)] hover:text-[var(--brand)] transition-colors">
+                    <i data-lucide="message-circle" class="w-4 h-4"></i>
+                    <span>评论</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </article>
+          <article class="day-section">
+            <h2 class="text-base font-semibold text-[var(--ink)] mb-3 sticky top-0 bg-[var(--bg)] py-1 z-10">8月13日 周三</h2>
+            <div class="flex flex-col gap-4">
+              <div class="entry flex gap-3">
+                <div class="w-10 text-right text-xs text-[var(--ink-2)] pt-2 shrink-0">18:45</div>
+                <div class="flex-1 min-w-0 bg-[var(--surface)] rounded-lg p-3 border border-[var(--line)] shadow-sm">
+                  <p class="text-sm text-[var(--ink)] mb-2">傍晚散步，遇到很美的夕阳</p>
+                  <img src="../assets/photo-sunset.jpg" alt="夕阳" class="w-full rounded-md object-cover" style="aspect-ratio: 16/10;">
+                  <button type="button" class="mt-2 w-full flex items-center justify-end gap-1 text-xs text-[var(--ink-2)] hover:text-[var(--brand)] transition-colors">
+                    <i data-lucide="message-circle" class="w-4 h-4"></i>
+                    <span>评论</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </article>
+        </section>
+      </main>
+    </div>
+    <nav data-mobile-nav="global" class="w-full border-t border-[var(--line)] bg-[var(--surface)] h-[64px]"><div class="w-full max-w-md mx-auto grid grid-cols-3 h-full"><a href="home.html" data-nav-key="home" data-active="true" class="min-w-0 flex flex-col items-center justify-center gap-0.5 px-1 h-full text-[var(--brand)] font-medium"><i data-lucide="book-open" class="w-5 h-5 shrink-0"></i><span class="text-[11px] leading-none whitespace-nowrap max-w-full truncate">记录</span></a><a href="create.html" data-nav-key="create" class="min-w-0 flex flex-col items-center justify-center gap-0.5 px-1 h-full text-[var(--ink-2)]"><i data-lucide="plus-circle" class="w-5 h-5 shrink-0"></i><span class="text-[11px] leading-none whitespace-nowrap max-w-full truncate">发布</span></a><a href="me.html" data-nav-key="me" class="min-w-0 flex flex-col items-center justify-center gap-0.5 px-1 h-full text-[var(--ink-2)]"><i data-lucide="user" class="w-5 h-5 shrink-0"></i><span class="text-[11px] leading-none whitespace-nowrap max-w-full truncate">我的</span></a></div></nav>
+    <style id="critical-layout">
+      body { background: var(--bg); }
+      .app-frame { max-width: 28rem; margin: 0 auto; min-height: 100vh; display: flex; flex-direction: column; background: var(--bg); }
+      #main-scroll { flex: 1; display: flex; overflow: hidden; }
+      #date-filter-panel { width: 84px; flex-shrink: 0; overflow-y: auto; }
+      #timeline-feed { flex: 1; overflow-y: auto; min-width: 0; padding: 16px; }
+      .image-grid-9 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; }
+      .image-grid-9 img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: var(--radius-md); }
+    </style>
+    <script>lucide.createIcons();</script>
+</body>
+</html>

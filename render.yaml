@@ -1,0 +1,13 @@
+# Render Blueprint 配置
+# 注意：服务名（即网址前缀）在 Render 上需全局唯一，如已被占用请改成你自己的名字
+services:
+  - type: web
+    name: life-diary
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: SESSION_SECRET
+        generateValue: true
+      # DATABASE_URL 请在 Render 控制台手动添加（Neon 连接串，含密码，不宜写进仓库）

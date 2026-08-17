@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>登录 · 生活记录</title>
+  <link rel="stylesheet" href="colors_and_type.css">
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Noto Sans SC", sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .card {
+      width: 100%;
+      max-width: 360px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      padding: 28px 24px;
+      box-shadow: var(--shadow-2);
+    }
+    .brand { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+    .brand .logo {
+      width: 40px; height: 40px; border-radius: 12px;
+      background: var(--brand-soft); color: var(--brand);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 600; font-size: 18px;
+    }
+    h1 { font-size: 20px; margin: 0; }
+    .sub { color: var(--ink-2); font-size: 13px; margin: 4px 0 20px; }
+    .tabs {
+      display: flex; background: var(--surface-2); border-radius: var(--radius-pill);
+      padding: 3px; margin-bottom: 20px;
+    }
+    .tab {
+      flex: 1; text-align: center; padding: 8px 0; border-radius: var(--radius-pill);
+      font-size: 14px; color: var(--ink-2); cursor: pointer; border: none; background: transparent;
+    }
+    .tab.active { background: var(--surface); color: var(--ink); font-weight: 500; box-shadow: var(--shadow-1); }
+    .field { margin-bottom: 14px; }
+    .field label { display: block; font-size: 13px; color: var(--ink-2); margin-bottom: 6px; }
+    .field input {
+      width: 100%; padding: 10px 12px; border: 1px solid var(--line);
+      border-radius: var(--radius-md); font-size: 15px; background: var(--bg); color: var(--ink); outline: none;
+    }
+    .field input:focus { border-color: var(--brand); box-shadow: 0 0 0 3px var(--brand-soft); }
+    .btn {
+      width: 100%; padding: 11px; border: none; border-radius: var(--radius-md);
+      background: var(--brand); color: var(--brand-ink); font-size: 15px; font-weight: 500; cursor: pointer;
+    }
+    .btn:hover { opacity: 0.92; }
+    .msg { font-size: 13px; margin: 12px 0 0; text-align: center; min-height: 18px; }
+    .msg.error { color: var(--state-error); }
+    .msg.ok { color: var(--state-success); }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="brand">
+      <div class="logo">记</div>
+      <h1>生活记录</h1>
+    </div>
+    <p class="sub">登录后开始记录每一天的小确幸</p>
+
+    <div class="tabs">
+      <button type="button" class="tab active" id="tab-login">登录</button>
+      <button type="button" class="tab" id="tab-register">注册</button>
+    </div>
+
+    <form id="login-form">
+      <div class="field">
+        <label>用户名</label>
+        <input name="username" autocomplete="username" required>
+      </div>
+      <div class="field">
+        <label>密码</label>
+        <input name="password" type="password" autocomplete="current-password" required>
+      </div>
+      <button class="btn" type="submit">登录</button>
+    </form>
+
+    <form id="register-form" style="display:none">
+      <div class="field">
+        <label>用户名（至少 2 个字符）</label>
+        <input name="username" autocomplete="username" required>
+      </div>
+      <div class="field">
+        <label>密码（至少 6 位）</label>
+        <input name="password" type="password" autocomplete="new-password" required minlength="6">
+      </div>
+      <button class="btn" type="submit">创建账号</button>
+    </form>
+
+    <p class="msg" id="msg"></p>
+  </div>
+
+  <script>
+    const tabLogin = document.getElementById('tab-login');
+    const tabRegister = document.getElementById('tab-register');
+    const loginForm = document.getElementById('login-form');
+    const registerForm = document.getElementById('register-form');
+    const msg = document.getElementById('msg');
+
+    function setTab(mode) {
+      const isLogin = mode === 'login';
+      tabLogin.classList.toggle('active', isLogin);
+      tabRegister.classList.toggle('active', !isLogin);
+      loginForm.style.display = isLogin ? '' : 'none';
+      registerForm.style.display = isLogin ? 'none' : '';
+      msg.textContent = '';
+      msg.className = 'msg';
+    }
+    tabLogin.addEventListener('click', () => setTab('login'));
+    tabRegister.addEventListener('click', () => setTab('register'));
+
+    function showMsg(text, type) {
+      msg.textContent = text;
+      msg.className = 'msg ' + type;
+    }
+
+    async function submit(e, url) {
+      e.preventDefault();
+      const form = e.target;
+      const data = Object.fromEntries(new FormData(form).entries());
+      try {
+        const res = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+        const result = await res.json();
+        if (res.ok) {
+          showMsg('成功，正在进入…', 'ok');
+          window.location.href = '/home.html';
+        } else {
+          showMsg(result.error || '操作失败', 'error');
+        }
+      } catch (err) {
+        showMsg('网络错误，请稍后重试', 'error');
+      }
+    }
+    loginForm.addEventListener('submit', (e) => submit(e, '/api/login'));
+    registerForm.addEventListener('submit', (e) => submit(e, '/api/register'));
+  </script>
+</body>
+</html>

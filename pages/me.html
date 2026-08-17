@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的</title>
+    <style id="theme-vars">
+:root {
+  --bg: #faf9f7;
+  --surface: #ffffff;
+  --surface-2: #f5f4f1;
+  --ink: #1f1f1f;
+  --ink-2: #6b6b6b;
+  --ink-3: #a3a3a3;
+  --line: #e8e6e1;
+  --brand: #c17f59;
+  --brand-ink: #ffffff;
+  --brand-soft: #f7ede6;
+  --state-success: #5c8d6d;
+  --state-error: #c45b5b;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+  --radius-pill: 999px;
+  --shadow-1: 0 1px 2px rgba(31, 31, 31, 0.05), 0 1px 1px rgba(31, 31, 31, 0.03);
+  --shadow-2: 0 8px 24px -8px rgba(31, 31, 31, 0.12);
+
+  /* Semantic aliases for head contract */
+  --life-background: var(--bg);
+  --life-foreground: var(--ink);
+  --life-card: var(--surface);
+  --life-card-foreground: var(--ink);
+  --life-popover: var(--surface);
+  --life-popover-foreground: var(--ink);
+  --life-primary: var(--brand);
+  --life-primary-foreground: var(--brand-ink);
+  --life-muted: var(--surface-2);
+  --life-muted-foreground: var(--ink-2);
+  --life-border: var(--line);
+  --life-input: var(--line);
+  --life-ring: var(--brand);
+  --life-radius-sm: var(--radius-sm);
+  --life-radius-md: var(--radius-md);
+  --life-radius-lg: var(--radius-lg);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #121212;
+    --surface: #1c1c1c;
+    --surface-2: #262626;
+    --ink: #f2f2f2;
+    --ink-2: #a8a8a8;
+    --ink-3: #6e6e6e;
+    --line: #333333;
+    --brand: #d89770;
+    --brand-ink: #1f1f1f;
+    --brand-soft: #3a2a20;
+    --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.05), 0 1px 1px rgba(0, 0, 0, 0.03);
+    --shadow-2: 0 8px 24px -8px rgba(0, 0, 0, 0.4);
+  }
+}
+
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.1/dist/index.global.js"></script>
+    <script src="https://unpkg.com/lucide@1.8.0/dist/umd/lucide.min.js"></script>
+    <style type="text/tailwindcss">
+  @theme inline {
+    --color-background: var(--life-background);
+    --color-foreground: var(--life-foreground);
+    --color-card: var(--life-card);
+    --color-card-foreground: var(--life-card-foreground);
+    --color-popover: var(--life-popover);
+    --color-popover-foreground: var(--life-popover-foreground);
+    --color-primary: var(--life-primary);
+    --color-primary-foreground: var(--life-primary-foreground);
+    --color-muted: var(--life-muted);
+    --color-muted-foreground: var(--life-muted-foreground);
+    --color-border: var(--life-border);
+    --color-input: var(--life-input);
+    --color-ring: var(--life-ring);
+    --radius-sm: var(--life-radius-sm);
+    --radius-md: var(--life-radius-md);
+    --radius-lg: var(--life-radius-lg);
+  }
+  @layer base {
+    body { background: var(--life-background); color: var(--life-foreground); }
+    td, th { @apply break-words; word-break: break-all; word-break: auto-phrase; }
+    th { @apply whitespace-nowrap; }
+  }
+    </style>
+    <style id="semantic-token-fallback">
+      .bg-background { background-color: var(--life-background); }
+      .text-background { color: var(--life-background); }
+      .border-background { border-color: var(--life-background); }
+      .ring-background { --tw-ring-color: var(--life-background); }
+      .bg-foreground { background-color: var(--life-foreground); }
+      .text-foreground { color: var(--life-foreground); }
+      .border-foreground { border-color: var(--life-foreground); }
+      .ring-foreground { --tw-ring-color: var(--life-foreground); }
+      .bg-card { background-color: var(--life-card); }
+      .text-card { color: var(--life-card); }
+      .border-card { border-color: var(--life-card); }
+      .ring-card { --tw-ring-color: var(--life-card); }
+      .bg-card-foreground { background-color: var(--life-card-foreground); }
+      .text-card-foreground { color: var(--life-card-foreground); }
+      .border-card-foreground { border-color: var(--life-card-foreground); }
+      .ring-card-foreground { --tw-ring-color: var(--life-card-foreground); }
+      .bg-popover { background-color: var(--life-popover); }
+      .text-popover { color: var(--life-popover); }
+      .border-popover { border-color: var(--life-popover); }
+      .ring-popover { --tw-ring-color: var(--life-popover); }
+      .bg-popover-foreground { background-color: var(--life-popover-foreground); }
+      .text-popover-foreground { color: var(--life-popover-foreground); }
+      .border-popover-foreground { border-color: var(--life-popover-foreground); }
+      .ring-popover-foreground { --tw-ring-color: var(--life-popover-foreground); }
+      .bg-primary { background-color: var(--life-primary); }
+      .text-primary { color: var(--life-primary); }
+      .border-primary { border-color: var(--life-primary); }
+      .ring-primary { --tw-ring-color: var(--life-primary); }
+      .bg-primary-foreground { background-color: var(--life-primary-foreground); }
+      .text-primary-foreground { color: var(--life-primary-foreground); }
+      .border-primary-foreground { border-color: var(--life-primary-foreground); }
+      .ring-primary-foreground { --tw-ring-color: var(--life-primary-foreground); }
+      .bg-muted { background-color: var(--life-muted); }
+      .text-muted { color: var(--life-muted); }
+      .border-muted { border-color: var(--life-muted); }
+      .ring-muted { --tw-ring-color: var(--life-muted); }
+      .bg-muted-foreground { background-color: var(--life-muted-foreground); }
+      .text-muted-foreground { color: var(--life-muted-foreground); }
+      .border-muted-foreground { border-color: var(--life-muted-foreground); }
+      .ring-muted-foreground { --tw-ring-color: var(--life-muted-foreground); }
+      .bg-border { background-color: var(--life-border); }
+      .text-border { color: var(--life-border); }
+      .border-border { border-color: var(--life-border); }
+      .ring-border { --tw-ring-color: var(--life-border); }
+      .bg-input { background-color: var(--life-input); }
+      .text-input { color: var(--life-input); }
+      .border-input { border-color: var(--life-input); }
+      .ring-input { --tw-ring-color: var(--life-input); }
+      .bg-ring { background-color: var(--life-ring); }
+      .text-ring { color: var(--life-ring); }
+      .border-ring { border-color: var(--life-ring); }
+      .ring-ring { --tw-ring-color: var(--life-ring); }
+    </style>
+    <style>
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      [data-icon] {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        -webkit-mask-size: contain;
+        mask-size: contain;
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+        -webkit-mask-position: center;
+        mask-position: center;
+        background-color: currentColor;
+      }
+    </style>
+</head>
+<body class="min-h-screen font-sans antialiased">
+    <main>
+        <header class="h-14 flex items-center px-4 border-b border-[var(--line)] bg-[var(--surface)]">
+            <h1 class="text-lg font-semibold text-[var(--ink)]">我的</h1>
+        </header>
+
+        <section class="p-4">
+            <div class="bg-[var(--surface)] rounded-xl border border-[var(--line)] p-5 shadow-[var(--shadow-1)] flex items-center gap-4">
+                <div class="w-16 h-16 rounded-full bg-[var(--brand-soft)] flex items-center justify-center text-[var(--brand)] text-2xl font-medium">我</div>
+                <div>
+                    <h2 id="profile-name" class="text-[17px] font-medium text-[var(--ink)]">生活记录者</h2>
+                    <p class="text-[13px] text-[var(--ink-2)] mt-0.5">记录每一天的小确幸</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-3 gap-3 mt-4">
+                <div class="bg-[var(--surface)] rounded-xl border border-[var(--line)] p-4 text-center shadow-[var(--shadow-1)]">
+                    <div class="text-xl font-semibold text-[var(--ink)]">28</div>
+                    <div class="text-[12px] text-[var(--ink-2)] mt-1">记录天数</div>
+                </div>
+                <div class="bg-[var(--surface)] rounded-xl border border-[var(--line)] p-4 text-center shadow-[var(--shadow-1)]">
+                    <div class="text-xl font-semibold text-[var(--ink)]">46</div>
+                    <div class="text-[12px] text-[var(--ink-2)] mt-1">动态</div>
+                </div>
+                <div class="bg-[var(--surface)] rounded-xl border border-[var(--line)] p-4 text-center shadow-[var(--shadow-1)]">
+                    <div class="text-xl font-semibold text-[var(--ink)]">12</div>
+                    <div class="text-[12px] text-[var(--ink-2)] mt-1">照片</div>
+                </div>
+            </div>
+
+            <div class="bg-[var(--surface)] rounded-xl border border-[var(--line)] mt-4 overflow-hidden shadow-[var(--shadow-1)]">
+                <a href="home.html" data-dom-id="link-my-records" class="flex items-center justify-between px-4 py-3.5 border-b border-[var(--line)] hover:bg-[var(--surface-2)] transition-colors">
+                    <div class="flex items-center gap-3 text-[var(--ink)]">
+                        <i data-lucide="book-open" class="w-5 h-5 text-[var(--brand)]"></i>
+                        <span class="text-[15px]">我的记录</span>
+                    </div>
+                    <i data-lucide="chevron-right" class="w-5 h-5 text-[var(--ink-3)]"></i>
+                </a>
+                <a href="#" class="flex items-center justify-between px-4 py-3.5 border-b border-[var(--line)] hover:bg-[var(--surface-2)] transition-colors">
+                    <div class="flex items-center gap-3 text-[var(--ink)]">
+                        <i data-lucide="tag" class="w-5 h-5 text-[var(--brand)]"></i>
+                        <span class="text-[15px]">标签管理</span>
+                    </div>
+                    <i data-lucide="chevron-right" class="w-5 h-5 text-[var(--ink-3)]"></i>
+                </a>
+                <a href="#" class="flex items-center justify-between px-4 py-3.5 hover:bg-[var(--surface-2)] transition-colors">
+                    <div class="flex items-center gap-3 text-[var(--ink)]">
+                        <i data-lucide="lock" class="w-5 h-5 text-[var(--brand)]"></i>
+                        <span class="text-[15px]">隐私设置</span>
+                    </div>
+                    <div class="flex items-center gap-1">
+                        <span class="text-[13px] text-[var(--ink-2)]">仅自己可见</span>
+                        <i data-lucide="chevron-right" class="w-5 h-5 text-[var(--ink-3)]"></i>
+                    </div>
+                </a>
+            </div>
+
+            <div class="bg-[var(--surface)] rounded-xl border border-[var(--line)] mt-4 overflow-hidden shadow-[var(--shadow-1)]">
+                <a href="#" class="flex items-center justify-between px-4 py-3.5 border-b border-[var(--line)] hover:bg-[var(--surface-2)] transition-colors">
+                    <div class="flex items-center gap-3 text-[var(--ink)]">
+                        <i data-lucide="moon" class="w-5 h-5 text-[var(--brand)]"></i>
+                        <span class="text-[15px]">深色模式</span>
+                    </div>
+                    <span class="text-[13px] text-[var(--ink-2)]">跟随系统</span>
+                </a>
+                <a href="#" class="flex items-center justify-between px-4 py-3.5 hover:bg-[var(--surface-2)] transition-colors">
+                    <div class="flex items-center gap-3 text-[var(--ink)]">
+                        <i data-lucide="info" class="w-5 h-5 text-[var(--brand)]"></i>
+                        <span class="text-[15px]">关于</span>
+                    </div>
+                    <i data-lucide="chevron-right" class="w-5 h-5 text-[var(--ink-3)]"></i>
+                </a>
+                <a href="#" id="btn-logout" class="flex items-center justify-between px-4 py-3.5 hover:bg-[var(--surface-2)] transition-colors">
+                    <div class="flex items-center gap-3 text-[var(--state-error)]">
+                        <i data-lucide="log-out" class="w-5 h-5"></i>
+                        <span class="text-[15px]">退出登录</span>
+                    </div>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <nav data-mobile-nav="global" class="w-full border-t border-[var(--line)] bg-[var(--surface)] h-[64px]"><div class="w-full max-w-md mx-auto grid grid-cols-3 h-full"><a href="home.html" data-nav-key="home" class="min-w-0 flex flex-col items-center justify-center gap-0.5 px-1 h-full text-[var(--ink-2)]"><i data-lucide="book-open" class="w-5 h-5 shrink-0"></i><span class="text-[11px] leading-none whitespace-nowrap max-w-full truncate">记录</span></a><a href="create.html" data-nav-key="create" class="min-w-0 flex flex-col items-center justify-center gap-0.5 px-1 h-full text-[var(--ink-2)]"><i data-lucide="plus-circle" class="w-5 h-5 shrink-0"></i><span class="text-[11px] leading-none whitespace-nowrap max-w-full truncate">发布</span></a><a href="me.html" data-nav-key="me" data-active="true" class="min-w-0 flex flex-col items-center justify-center gap-0.5 px-1 h-full text-[var(--brand)] font-medium"><i data-lucide="user" class="w-5 h-5 shrink-0"></i><span class="text-[11px] leading-none whitespace-nowrap max-w-full truncate">我的</span></a></div></nav>
+    <style id="critical-layout">
+      body { background: var(--bg); max-width: 28rem; margin: 0 auto; min-height: 100vh; display: flex; flex-direction: column; }
+      main { flex: 1 1 auto; padding: 1rem; }
+      * { box-sizing: border-box; }
+    </style>
+    <script>
+      (async () => {
+        try {
+          const res = await fetch('/api/me', { headers: { 'Accept': 'application/json' } });
+          if (res.ok) {
+            const data = await res.json();
+            const nameEl = document.getElementById('profile-name');
+            if (nameEl && data.username) nameEl.textContent = data.username;
+          }
+        } catch (e) {}
+      })();
+      document.getElementById('btn-logout')?.addEventListener('click', async (e) => {
+        e.preventDefault();
+        await fetch('/api/logout', { method: 'POST' });
+        window.location.href = '/login.html';
+      });
+    </script>
+    <script>lucide.createIcons();</script>
+</body>
+</html>
