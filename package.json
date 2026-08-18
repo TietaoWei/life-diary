@@ -5,8 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "build:css": "@tailwindcss/cli -i ./tailwind-input.css -o ./tailwind.css --minify",
-    "postinstall": "npm run build:css"
+    "build:css": "npx @tailwindcss/cli -i ./tailwind-input.css -o ./tailwind.css --minify"
   },
   "engines": {
     "node": ">=20"

@@ -5,7 +5,7 @@ services:
     name: life-diary
     runtime: node
     plan: free
-    buildCommand: npm install
+    buildCommand: npm install && npm run build:css
     startCommand: node server.js
     envVars:
       - key: SESSION_SECRET
